@@ -8,12 +8,30 @@
 # Functions go here
 
 
+# Number checking Function
+def num_check(question):
+
+    error = "please enter a number that is more than zero"
+
+    valid = False
+    while not valid:
+        try:
+            response = float(input(question))
+
+            if response <= 0:
+                print(error)
+            else:
+                return response
+
+        except ValueError:
+            print(error)
+
 
 # Main routine goes here
 
-serving_size = float(input("what is the recipe serving size? "))
-desired_size = float(input("How many servings as needed? "))
+serving_size = num_check("what is the recipe serving size? ")
+desired_size = num_check("How many servings as needed? ")
 
-scale_factor =desired_size / serving_size
+scale_factor = desired_size / serving_size
 
 print("scale Factor: {}".format(scale_factor))
