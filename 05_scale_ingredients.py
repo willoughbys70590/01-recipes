@@ -8,8 +8,16 @@ def num_check(question):
 
     valid = False
     while not valid:
+
+        # if response is the exit code, return the exit code
+        response = input(question)
+
+        if response.lower() == "xxx":
+            return "xxx"
+
+        # Otherwise check that the response is a number that is more than zero
         try:
-            response = float(input(question))
+            response = float(response)
 
             if response <= 0:
                 print(error)
@@ -41,18 +49,10 @@ def not_blank(question, error_msg, num_ok):
         else:
             return response
 
-
-
-
-
 # Main routine...
 
 # Replace line below with component 3 in due course
 scale_factor = float(input("scale Factor "))
-
-
-
-
 
 # Set up empty ingredients list
 ingredients = []
@@ -65,16 +65,16 @@ while stop != "xxx":
 
     # stop loopin if exit code is typed and there are more
     # than 2 ingredients
-    if amount.lower() == "xxx" and len(ingredients) >  1:
+    if amount == "xxx" and len(ingredients) >  1:
         break
 
-    elif amount.lower() == "xxx" and len (ingredients) <2:
+    elif amount == "xxx" and len (ingredients) <2:
         print("you need at least two ingredients in the list.  "
               "please add more ingredients. ")
     # If exit code is not entered, add ingredient to list
     else:
         # Ask user for ingredient (via not blank function)
-        get_ingredients = not_blank("please type in an ingredient name (or 'xxx')",
+        get_ingredients = not_blank("please type in an ingredient name ",
                                     "this cant be blank",
                                     "yes")
         amount = float(amount) * scale_factor
