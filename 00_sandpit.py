@@ -26,4 +26,3 @@ if re.match(mixed_regex, recipe_line):
 
 get_unit = unit_ingredient.split(" ", 1)        # splits text at first space
 print(get_unit)
-

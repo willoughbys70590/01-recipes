@@ -26,10 +26,6 @@ def num_check(question):
         except ValueError:
             print(error)
 
-# Main routine goes here
-dodgy_sf = "yes"
-while dodgy_sf == "yes":
-
     serving_size = num_check("what is the recipe serving size? ")
     desired_size = num_check("How many servings as needed? ")
 
