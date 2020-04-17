@@ -1,6 +1,6 @@
 # modules to be used...
 import csv
-import re
+import  re
 
 # ***** Functions ******
 
@@ -134,7 +134,7 @@ unit_central = {
 
 # *** generate food dictionaries ****
     # open file
-    groceries = open('01_ingredients_ml_to_g.csv')
+        groceries = open('01_ingredients_ml_to_g.csv')
 
     # Read data into a list
     csv_groceries = csv.reader(groceries)
@@ -277,4 +277,3 @@ for recipe_line in full_recipe:
 for items in modernised_recipe:
     print(items)
 
-video 37 
