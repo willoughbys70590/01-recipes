@@ -132,7 +132,7 @@ unit_central = {
         "liter": 1000,
     }
 
-    # *** generate fooddictionaries *****
+# *** generate food dictionaries ****
     # open file
     groceries = open('01_ingredients_ml_to_g.csv')
 
@@ -241,8 +241,29 @@ for recipe_line in full_recipe:
 
     num_spaces = recipe_line.count(" ")
     if num_spaces > 1:
+        # item has unit and ingredient
+        unit = get_unit[0]
         ingredient = get_unit[1]
-    # Convert from ml to g
+        unit = unit_checker(unit)
+
+        #if unit is already in grams, add it to list
+        if unit == "g":
+            modernised_recipe.append("{:0f} g{}".format(amount, ingredient))
+            continue
+
+    # convert to mls if possible...
+    amount = general_converter(amount, unit, unit_central, 1)
+
+    #if we converted to mls try and convert to grams
+    if amount[1] == "yes":
+            amount_2 = general_converter(amount[0], ingredient, food_dictionary,250)
+
+        #if the ingredient is in the list,covert it
+    if amount_2[1] == "yes":
+        modernised_recipe.append("{:.0f} g {}".format(amount_2[0], ingredient))     # rather than printing, update modernised list (g)
+
+    # if the ingredient is not in the list, leave the unit as ml
+
     else:
         modernised_recipe.append("{} {}}".format(amount, unit_ingredient))
         continue
@@ -255,3 +276,5 @@ for recipe_line in full_recipe:
 # output ingredient list
 for items in modernised_recipe:
     print(items)
+
+video 37 
