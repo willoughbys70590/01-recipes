@@ -70,55 +70,76 @@ def get_sf():
 
 
 def get_all_ingredients():
+    # Set up empty ingredients list
+    ingredients = []
 
-    def general_converter(how_much, lookup, dictionary, conversion_factor):
+stop = ""
+while stop != "xxx":
+    # Ask user for ingredient (via not blank function)
+    get_ingredients = not_blank("please type in an ingredient name (or 'xxx')",
+                                "this cant be blank",
+                                "yes")
 
-        if lookup in dictionary:
-            mult_by = dictionary.get(unit)
-            how_much = how_much * float(mult_by) / conversion_factor
-            converted = "yes"
+    # stop loopin if exit code is typed and there are more
+    # than 2 ingredients
+    if get_ingredients.lower() == "xxx" and len(ingredients) > 1:
+        break
 
-        else:
-            converted = "no"
+    # If exit code is not entered, add ingredient to list
+    else:
+        ingredients.append(get_ingredients)
 
-            return [how_much, converted]
+        return ingredients
 
-    def unit_checker():
 
-        unit_tocheck = input("Unit? ")
+def general_converter(how_much, lookup, dictionary, conversion_factor):
 
-        # Abbreviation lists
-        teaspoon = [" tsp", "teaspoon", "t"]
-        tablespoon = ["tbs", "tablespoon", "T", "tbsp"]
-        ounce = ["oz", "ounce", "fl oz"]
-        cup = ["c", "cup", "cups"]
-        print = ["p", "pt", "fl pt"]
-        quart = ["q", "qt", "fl qt"]
-        mls = ["ml", "milliliter", "milliltre"]
-        liter = ["litre", "liter", "l"]
-        pound = ["pound", "lb", "#"]
+    if lookup in dictionary:
+        mult_by = dictionary.get(lookup)
+        how_much = how_much * float(mult_by) / conversion_factor
+        converted = "yes"
 
-        if unit_tocheck == "":
-            # print("you chose {}".format(unit_tocheck))
-            return unit_tocheck
-        elif unit_tocheck == "T" or unit_tocheck.lower() in tablespoon:
-            return "tbs"
-        elif unit_tocheck.lower() in teaspoon:
-            return "tsp"
-        elif unit_tocheck.lower() in ounce:
-            return "ounce"
-        elif unit_tocheck.lower() in cup:
-            return "cup"
-        elif unit_tocheck.lower() in print:
-            return "print"
-        elif unit_tocheck.lower() in quart:
-            return "quart"
-        elif unit_tocheck.lower() in mls:
-            return "mls"
-        elif unit_tocheck.lower() in litre:
-            return "litre"
-        elif unit_tocheck.lower() in pound:
-            return "pound"
+    else:
+        converted = "no"
+
+    return [how_much, converted]
+
+def unit_checker(unit):
+
+    unit_tocheck = unit
+
+    # Abbreviation lists
+    teaspoon = [" tsp", "teaspoon", "t"]
+    tablespoon = ["tbs", "tablespoon", "T", "tbsp"]
+    ounce = ["oz", "ounce", "fl oz"]
+    cup = ["c", "cup", "cups"]
+    pint = ["p", "pt", "fl pt"]
+    quart = ["q", "qt", "fl qt"]
+    mls = ["ml", "milliliter", "milliltre"]
+    liter = ["litre", "liter", "l"]
+    pound = ["pound", "lb", "#"]
+
+    if unit_tocheck == "":
+        # print("you chose {}".format(unit_tocheck))
+        return unit_tocheck
+    elif unit_tocheck == "T" or unit_tocheck.lower() in tablespoon:
+        return "tbs"
+    elif unit_tocheck.lower() in teaspoon:
+        return "tsp"
+    elif unit_tocheck.lower() in ounce:
+        return "ounce"
+    elif unit_tocheck.lower() in cup:
+        return "cup"
+    elif unit_tocheck.lower() in pint:
+        return "pint"
+    elif unit_tocheck.lower() in quart:
+        return "quart"
+    elif unit_tocheck.lower() in mls:
+        return "mls"
+    elif unit_tocheck.lower() in liter:
+        return "litre"
+    elif unit_tocheck.lower() in pound:
+        return "pound"
 
 # ****** Main Routine goes here *******
 unit_central = {
@@ -133,43 +154,23 @@ unit_central = {
     }
 
 # *** generate food dictionaries ****
-    # open file
-            groceries = open('01_ingredients_ml_to_g.csv')
+# open file
+groceries = open('01_ingredients_ml_to_g.csv')
 
-    # Read data into a list
-    csv_groceries = csv.reader(groceries)
+# Read data into a list
+csv_groceries = csv.reader(groceries)
 
-    # Create a dictionary to hold the data
-    food_dictionary = {}
+# Create a dictionary to hold the data
+food_dictionary = {}
 
-    # Add the data from the list into the dictionary
-    # (first item in a row is key, next is definition)
+# Add the data from the list into the dictionary
+# (first item in a row is key, next is definition)
 
     for row in csv_groceries:
         food_dictionary[row[0]] = row[1]
 
     # print(food_dictionary)
 
-    # Set up empty ingredients list
-    ingredients = []
-
-    stop = ""
-    while stop != "xxx":
-        # Ask user for ingredient (via not blank function)
-        get_ingredients = not_blank("please type in an ingredient name (or 'xxx')",
-                                    "this cant be blank",
-                                    "yes")
-
-        # stop loopin if exit code is typed and there are more
-        # than 2 ingredients
-        if get_ingredients.lower() == "xxx" and len(ingredients) > 1:
-            break
-
-        # If exit code is not entered, add ingredient to list
-        else:
-            ingredients.append(get_ingredients)
-
-    return ingredients
 
 # ***** Main routine ******
 
@@ -251,26 +252,33 @@ for recipe_line in full_recipe:
             modernised_recipe.append("{:0f} g{}".format(amount, ingredient))
             continue
 
-    # convert to mls if possible...
-    amount = general_converter(amount, unit, unit_central, 1)
+        # convert to mls if possible...
+        amount = general_converter(amount, unit, unit_central, 1)
+        # print(amount)
 
-    #if we converted to mls try and convert to grams
-    if amount[1] == "yes":
+        #if we converted to mls try and convert to grams
+        if amount[1] == "yes":
             amount_2 = general_converter(amount[0], ingredient, food_dictionary,250)
 
-        #if the ingredient is in the list,covert it
-    if amount_2[1] == "yes":
-        modernised_recipe.append("{:.0f} g {}".format(amount_2[0], ingredient))     # rather than printing, update modernised list (g)
+            #if the ingredient is in the list,covert it
+            if amount_2[1] == "yes":
+                modernised_recipe.append("{:.0f} g {}".format(amount_2[0], ingredient))     # rather than printing, update modernised list (g)
 
-    # if the ingredient is not in the list, leave the unit as ml
+            # if the ingredient is not in the list, leave the unit as ml
+
+            else:
+                modernised_recipe.append("{:.0f} ml {}".format(amount(0), unit_ingredients))
+                continue
+        # If the unit is not mls, leave the line unchanged
+        else:
+            modernised_recipe.append("(:.2f) () ()".format(amount(0),unit, ingredients))
+
 
     else:
-        modernised_recipe.append("{} {}}".format(amount, unit_ingredient))
-        continue
+        # Items only has ingredient (no unit)
+        modernised_recipe.append("{} {}".format(amount, unit_ingredient))
 
-   modernised_recipe.append("{} {} {} }".format(amount, unit, ingredient))
-
-# Put updated ingredient in list
+ # Put updated ingredient in list
 
 
 # output ingredient list
